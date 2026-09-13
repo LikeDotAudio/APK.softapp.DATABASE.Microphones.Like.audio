@@ -1,4 +1,4 @@
 # Known Issues & Task Tracking — Microphones.Like.audio
 
-## 🔍 Active Issues
-Tracked: high-frequency smoothing discrepancy between IEC and ANSI measurement standards.
+## 🔍 Active Issues & Edge Cases
+Tracked: high-frequency smoothing discrepancies between IEC 61672 and ANSI S1.4 measurement standards.
