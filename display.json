@@ -1,0 +1,13 @@
+{
+  "id": "Microphones",
+  "name": "Microphones",
+  "icon": "🎙️",
+  "group": "Pipeline",
+  "subGroup": "01 · Event",
+  "kind": "web",
+  "class": "execution",
+  "description": "EVENT: MICROPHONES — microphones.like.audio, 2,067 microphone and RF records with polar patterns, frequency plots, signal-chain diagrams and CSV export. The page ships no vocabulary of its own: every chip, column and dropdown is built at runtime from data/config.json, which docs/build_data.py generates from Research/microphones.json and docs/vocabulary.py. Nothing under docs/data/ is committed, so the page is blank until that build has run.",
+  "topic": "APK.audio/Gui/Display/Microphones",
+  "autostart": false,
+  "app": "docs/index.html"
+}
