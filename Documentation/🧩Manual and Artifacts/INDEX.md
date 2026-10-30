@@ -8,5 +8,6 @@ How to use it and how it is built.
 | Page | What |
 |---|---|
 | [AES_proposal.md](AES_proposal.md) | AES_proposal |
-| [ARCHITECTURE_NOTES.md](ARCHITECTURE_NOTES.md) | Architecture Notes & Technical Specs — Microphones.Like.audio |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Architecture — Microphones.Like.audio |
+| [SMOKE.md](SMOKE.md) | Smoke test — DATABASE.Microphones.Like.audio |
 <!-- /wiki:index -->

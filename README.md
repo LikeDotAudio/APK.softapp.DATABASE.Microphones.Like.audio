@@ -310,10 +310,10 @@ The action syncs incrementally using `.ftp-deploy-sync-state.json` on the server
 Run the workflow manually with **full_sync** checked to ignore that state and
 re-upload everything.
 
-Only `build_data.py`, `build_rf.py`, `build_x230.py`, `vocabulary.py`,
-`__pycache__/` and `README.md` are excluded from the upload, so `kits.py`,
-`x230_read.py`, `build_logo.py` and `fetch_media.py` are published with the
-site.
+Every `*.py` under `docs/`, `__pycache__/` and `README.md` are excluded from the
+upload by pattern. Until 2026-10-30 the list was by name and missed `kits.py`,
+`x230_read.py`, `build_logo.py` and `fetch_media.py`; those copies stay on the
+server until a **full_sync** run.
 
 ## Installable
 
@@ -333,6 +333,11 @@ at its root, so the launcher opens the folder itself — `app: docs/index.html` 
 `topic` are not read by that reader, and nothing publishes on
 `APK.audio/Gui/Display/Microphones`. The app holds no bus connection.
 `subGroup: "01 · Event"` files it at pipeline stage 01.
+
+## Wiki
+
+Principles with code anchors, architecture, delivery and known issues:
+[Documentation/README.md](Documentation/README.md).
 
 ## Philosophy
 
