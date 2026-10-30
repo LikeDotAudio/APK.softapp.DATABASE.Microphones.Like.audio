@@ -47,12 +47,12 @@ jobs:
           server-dir: ${{ vars.FTP_SERVER_DIR || './' }}
           state-name: .ftp-deploy-sync-state.json
           dangerous-clean-slate: ${{ inputs.full_sync == true }}
+          # Every Python file under docs/ is a build or bench tool, never part of the site — so
+          # excluded by pattern, not by name. A named list let kits.py, x230_read.py, build_logo.py
+          # and fetch_media.py upload to microphones.like.audio as each was added.
           exclude: |
             **/.git*
             **/.git*/**
-            **/build_data.py
-            **/build_rf.py
-            **/build_x230.py
-            **/vocabulary.py
+            **/*.py
             **/__pycache__/**
             **/README.md
