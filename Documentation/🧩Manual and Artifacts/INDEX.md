@@ -1,0 +1,12 @@
+# 🧩Manual and Artifacts — DATABASE.Microphones.Like.audio
+
+How to use it and how it is built.
+
+← [Wiki home](../README.md)
+
+<!-- wiki:index -->
+| Page | What |
+|---|---|
+| [AES_proposal.md](AES_proposal.md) | AES_proposal |
+| [ARCHITECTURE_NOTES.md](ARCHITECTURE_NOTES.md) | Architecture Notes & Technical Specs — Microphones.Like.audio |
+<!-- /wiki:index -->
