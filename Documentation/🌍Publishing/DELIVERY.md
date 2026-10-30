@@ -7,7 +7,7 @@
 | Where | How | URL |
 |---|---|---|
 | **microphones.like.audio** | `.github/workflows/deploy.yml` on a push to `main` touching `docs/**`, the three source JSONs or the workflow (or on demand, with an optional **full_sync**): Python 3.12 runs `docs/build_data.py`, then `SamKirkland/FTP-Deploy-Action@v4.3.5` syncs `docs/` over FTPS using `FTP_SERVER` / `FTP_USERNAME` / `FTP_PASSWORD` and the optional `FTP_SERVER_DIR` variable. Excluded: `.git*`, `**/*.py`, `__pycache__/`, `README.md`. Concurrency group `ftps-deploy`. `.apk.scripts/deploy_all.py` at the APK.audio root re-runs it. | https://microphones.like.audio/ |
-| **apk.audio** | the root repo's `ci.yml` FTPS deploy of the Softapps tree (after a submodule bump). `docs/data/` is not committed, so this copy has no data. | `https://apk.audio/APK:Softapps/DATABASE/DATABASE.Microphones.Like.audio/docs/index.html` (page 200, `docs/data/index.json` 404 on 2026-10-30) |
+| **apk.audio** | the root repo's `ci.yml` FTPS deploy of the Softapps tree (after a submodule bump). `docs/data/` is not committed; since 2026-10-30 `ci.yml` runs `docs/build_data.py` (step *Build the Microphones data*) before the upload. | `https://apk.audio/APK:Softapps/DATABASE/DATABASE.Microphones.Like.audio/docs/index.html` (`docs/data/index.json` was 404 on 2026-10-30, before the next root deploy) |
 | **A node** | copied with the Softapps tree into WEB.Frontend-Assets and Storage-Portal; same missing `docs/data/`. The launcher opens the folder (no `entry`, no root page). | — |
 
 ## Not automated

@@ -17,4 +17,4 @@ Each principle with the code that keeps it. Ecosystem rules: the APK.audio root'
 ## Where it falls short
 - The dataset is used without the source's permission (stated plainly in the README, with a takedown promise).
 - The build warns on form factors with no label in `vocabulary.FORM_LABELS` and still exits 0.
-- The apk.audio copy under `APK:Softapps/` has no `docs/data/` (it is not committed and nothing there builds it), so that copy loads no data.
+- The node images' copy under `Softapps/` has `docs/data/` only when the checkout it was built from ran `docs/build_data.py` (it is not committed and the image has no build stage). apk.audio's root `ci.yml` builds it before the upload.
