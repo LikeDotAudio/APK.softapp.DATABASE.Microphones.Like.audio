@@ -12,9 +12,9 @@ Each principle with the code that keeps it. Ecosystem rules: the APK.audio root'
 | **Inherit only what is unanimous.** | `docs/kits.py:67` `_unanimous()`, `:124` `_inherit()` |
 | **Someone else's work stays theirs.** Attribution in the README; images mirrored only to a gitignored `Media/`; the fetcher honours `robots.txt` and goes slowly; the service worker never caches the image CDN. | `.gitignore` (`Media/`); `docs/fetch_media.py`; `docs/sw.js` |
 | **Network first.** A cache answers only when the network cannot. | `docs/sw.js` |
+| **Generated data is built where it ships.** `docs/data/` is never committed; every place that serves the page builds it: the deploy workflow, apk.audio's root `ci.yml`, and the bench's web-static image (its `microphones-data` stage). | `PODS/POD.THIN/WEB.Frontend-Assets/Docker/Dockerfile` `microphones-data` |
 | **Publish the site, not the tools.** Every `.py` under `docs/` is excluded from the upload by pattern. | `.github/workflows/deploy.yml` `exclude: **/*.py` |
 
 ## Where it falls short
 - The dataset is used without the source's permission (stated plainly in the README, with a takedown promise).
 - The build warns on form factors with no label in `vocabulary.FORM_LABELS` and still exits 0.
-- The node images' copy under `Softapps/` has `docs/data/` only when the checkout it was built from ran `docs/build_data.py` (it is not committed and the image has no build stage). apk.audio's root `ci.yml` builds it before the upload.
