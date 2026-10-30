@@ -12,4 +12,4 @@ Is `DATABASE.Microphones.Like.audio` deployed? Written by `.apk.scripts/smoke.py
 
 Re-run: `python3 .apk.scripts/smoke.py PODS/POD.THIN/Softapps/DATABASE/DATABASE.Microphones.Like.audio`
 
-<!-- smoke:sig 26fa0db23a9d since 2026-10-30 12:51 EDT -->
+<!-- smoke:sig 054a1c374818 since 2026-10-30 12:51 EDT -->
