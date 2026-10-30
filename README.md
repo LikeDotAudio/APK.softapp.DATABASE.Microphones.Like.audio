@@ -361,3 +361,7 @@ at its root, so the launcher opens the folder itself — `app: docs/index.html` 
   goes slowly by default (`.gitignore`, `docs/fetch_media.py`), and the service
   worker never caches the image CDN (`docs/sw.js`).
 - **Network first.** A cache may only answer when the network cannot (`docs/sw.js`).
+
+<!-- wiki:smoke -->
+**Smoke test** — ✅ PASS 1/1 since 2026-10-30 12:51 EDT — [results](Documentation/%F0%9F%A7%A9Manual%20and%20Artifacts/SMOKE.md)
+<!-- /wiki:smoke -->
