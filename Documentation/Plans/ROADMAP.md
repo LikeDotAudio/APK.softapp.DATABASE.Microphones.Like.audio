@@ -1,4 +1,8 @@
-# Roadmap & Development Plans — Microphones.Like.audio
+# Roadmap — Microphones.Like.audio
 
-## 🛣 Development Goals
-Develop interactive 3D polar response plot renderer, proximity effect frequency response simulation, and capsule diaphragm resonance analyzer.
+Today the catalogue builds from `Research/` in about a second (2,067 microphones and 81 wireless
+systems from 215 brands, each scored against the AES-X230 profile) and publishes `docs/` to
+microphones.like.audio on every push to `main`.
+
+Plans are not kept here. They live as cards in
+`APK.audio/Documentation/🛣Roadmap/roadmap.htm`.

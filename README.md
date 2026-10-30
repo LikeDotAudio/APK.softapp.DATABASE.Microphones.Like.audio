@@ -1,6 +1,6 @@
 # Microphones.Like.audio
 
-A browsable catalogue of 1,761 microphones and 70 wireless systems from 166
+A browsable catalogue of 2,067 microphones and 81 wireless systems from 215
 brands, read against the **AES-X230** draft microphone profile.
 
 The point of the project is the last part. X230 describes a microphone as a set
@@ -15,7 +15,7 @@ standards draft needs and rarely has.
 whose work this project depends on entirely.** The specification pages,
 frequency-response charts, editorial descriptions, product-lineage notes and tag
 vocabulary are all theirs. `Research/microphones.json` is a structured extraction
-of 1,761 of those profile pages.
+of 2,067 of those profile pages.
 
 **It is used here without permission, for research and standards-development
 purposes.** No commercial use is intended or made. If recordinghacks would like
@@ -26,8 +26,8 @@ Other sources:
 
 | Source | Used for |
 |---|---|
-| recordinghacks.com | the microphone catalogue (1,761 records) |
-| `Research/Wireless Microphone_RF_Components.json` | 70 wireless systems, 305 tuning ranges |
+| recordinghacks.com | the microphone catalogue (2,067 records) |
+| `Research/Wireless Microphone_RF_Components.json` | 81 wireless systems, 324 tuning ranges |
 | AES X230 object-list workbook (`X230-Mic-Profile-ObjectList-180502`) | the profile: 38 parameters, blocks, enumerations |
 | AES X230 typical block diagrams (`X230-Mic-Profile-TypicalBlockDiagrams-180502`) | the three reference signal chains |
 
@@ -37,12 +37,14 @@ machine-readable. Every transcribed row carries the workbook row it came from.
 ## Structure
 
 ```
-Research/microphones.json            source dataset (~22 MB, 1,761 records)
+Research/microphones.json            source dataset (~32 MB, 2,067 records)
 Research/microphone.schema.json      what a microphone record is
 Research/rf_component.schema.json    what a wireless system record is
 Research/aes_x230_profile.json       the X230 profile, transcribed
 Research/aes_x230_profile.schema.json    the X230 data model, as a schema
 Research/aes_x230_device.schema.json     one device read against the profile
+Research/audit_report.json           field-presence audit of the scraped pages
+Proposal/AES proposal.md             concept note: an AES directivity-reporting convention
 
 docs/index.html          the browser app — no dependencies, no build step
 docs/css/app.css         every style; the markup carries no <style> of its own
@@ -54,7 +56,12 @@ docs/build_data.py       splits the dataset into the files the app fetches
 docs/build_rf.py         normalises the wireless dataset
 docs/build_x230.py       validates and ships the profile
 docs/x230_read.py        reads each record against the profile
+docs/kits.py             resolves sets (drum packs, matched pairs) to their members
+docs/build_logo.py       draws docs/icon.svg and renders docs/icons/
 docs/fetch_media.py      mirrors the catalogue's images into Media/
+docs/sw.js, docs/manifest.webmanifest, docs/js/install.js
+                         the installable-app half: network-first service worker
+                         and the install offer
 docs/data/               generated — not committed
 Media/<brand>/<model>/   fetched images — not committed
 ```
@@ -74,12 +81,29 @@ the page.
 - `data/x230_report.json` — the schemas in full plus corpus-wide coverage
   statistics. Its own file because only the X230 tab needs it.
 
+### Kits
+
+105 records are sets — a drum pack, a matched pair — with a price and a list of
+what is in the box but no capsule, pattern or connector of their own.
+`docs/kits.py` resolves each member back to its own record and lets the kit
+inherit a fact **only when every member agrees on it**; patterns, tags and
+traits are unioned instead, because the filters ask "is any of this in the
+box?". The transducer type is unanimous or `mixed` (25 today). `kit.inherited`
+lists what was filled in and `kit.members` what it came from.
+
 ## Running locally
 
 ```bash
 python3 docs/build_data.py
 python3 -m http.server -d docs 8000
 ```
+
+The build takes about a second and prints its totals — checked 2026-10-30:
+`215 brands / 2067 microphones + 81 RF systems`, `kits 105 resolved (25
+mixed-type)`, `rf.json … 324 ranges`, `x230_report … 9 of 38 parameters ever
+answered, median score 44.0%`. It also prints a warning for every pattern, type
+and form factor in the data that `vocabulary.py` has no chip or label for; those
+are warnings, not failures, and the build exits 0.
 
 Then open <http://localhost:8000/>. The app needs HTTP — browsers block `fetch()`
 and ES modules from `file://`, so opening `docs/index.html` directly shows a
@@ -93,7 +117,7 @@ still run.
 
 ```bash
 python3 docs/fetch_media.py --limit 5 --dry-run    # see the plan
-python3 docs/fetch_media.py                        # ~6,200 files, ~25 minutes
+python3 docs/fetch_media.py                        # every model with media (1,745 today)
 ```
 
 Every photo, thumbnail and frequency-response chart the catalogue points at,
@@ -165,9 +189,9 @@ Two kinds of record need more than one row of boxes, and some need both:
 
 | Case | Records | Drawn as |
 |---|---|---|
-| **Stereo** — `classification.is_stereo` | 138 | two paths meeting at the connector, LEFT/RIGHT — or MID/SIDE when mid-side is the only array pattern, since calling those two paths left and right would misname them |
-| **Dual-diaphragm** — omni *and* figure-8 among the element patterns, or three or more of them | 240 | front and rear elements feeding a **pattern matrix** |
-| **Both** — e.g. the Josephson C700S | 14 | each channel with its own pair of diaphragms and its own matrix |
+| **Stereo** — `classification.is_stereo` | 146 | two paths meeting at the connector, LEFT/RIGHT — or MID/SIDE when mid-side is the only array pattern, since calling those two paths left and right would misname them |
+| **Dual-diaphragm** — omni *and* figure-8 among the element patterns, or three or more of them | 247 | front and rear elements feeding a **pattern matrix** |
+| **Both** — e.g. the Josephson C700S | 21 | each channel with its own pair of diaphragms and its own matrix |
 
 The dual-diaphragm rule is physics, not a tag lookup: no single element hears
 both omnidirectionally and in a figure-8, so a mic offering the pair has two
@@ -199,7 +223,8 @@ each parameter lands in one of six states:
 
 The **score** is mapped ÷ applicable, as a percentage. It appears on every model
 card, at the head of the device panel, and as a filter and sort order. A C 414
-B-XL II scores 67% (6 of 9); a Royer R-10 33%; a wireless system 12%.
+B-XL II scores 67% (6 of 9); a Royer R-10 33%; every wireless system 12%. Across all
+2,148 records the median is 44%, from 5% to 67%.
 
 The last three states are all excluded from the denominator, for the same
 reason: a record should not be marked down for failing to answer a question that
@@ -246,10 +271,10 @@ The finding is worth stating plainly. **9 of the profile's 38 parameters are
 answered by at least one record; 23 are answered by none.** Four are answered
 every time they are asked — Manufacturer, Device name, Frequency Select,
 Frequency Band Select — and after those the best covered are Polar pattern
-(84%), Sensitivity (75%) and Pattern parameter (70%). Pad (24%) and Low-Cut
-(26%) have a column in the source that is empty on most pages. The 23 silent
+(74%), Sensitivity (66%) and Pattern parameter (61%). Pad (21%) and Low-Cut
+(23%) have a column in the source that is empty on most pages. The 23 silent
 ones are the profile's control surface: gain, polarity, mute, dynamics, EQ,
-clocking, radio state. Gain is asked of all 1,831 records and answered by none.
+clocking, radio state. Gain is asked of all 2,148 records and answered by none.
 
 That is the gap the profile exists to close: a specification sheet describes
 what a microphone *is*, and X230 describes what a controller can *do to it*.
@@ -284,3 +309,55 @@ in the web root).
 The action syncs incrementally using `.ftp-deploy-sync-state.json` on the server.
 Run the workflow manually with **full_sync** checked to ignore that state and
 re-upload everything.
+
+Only `build_data.py`, `build_rf.py`, `build_x230.py`, `vocabulary.py`,
+`__pycache__/` and `README.md` are excluded from the upload, so `kits.py`,
+`x230_read.py`, `build_logo.py` and `fetch_media.py` are published with the
+site.
+
+## Installable
+
+`docs/sw.js` makes the site an installable app that still opens offline:
+network first, cache second, so a stale `main.js` is never served against a
+fresh data file; only this origin is cached, never the image CDN. Bump `CACHE`
+when the shell changes shape. `docs/js/install.js` offers the install once,
+remembers a dismissal, and explains the share-menu route on iOS.
+
+## In APK.audio
+
+This repository is a submodule at
+`PODS/POD.THIN/Softapps/DATABASE/DATABASE.Microphones.Like.audio`. `display.json`
+declares it to the launcher (`walk_project()` in
+`PODS/POD.THIN/WEB.OsApi/SRC/server.py`); the folder has no `entry` and no page
+at its root, so the launcher opens the folder itself — `app: docs/index.html` and
+`topic` are not read by that reader, and nothing publishes on
+`APK.audio/Gui/Display/Microphones`. The app holds no bus connection.
+`subGroup: "01 · Event"` files it at pipeline stage 01.
+
+## Philosophy
+
+- **Unknown is NULL, and printed as one.** The X230 reading has a state for
+  "applies but nothing can answer it" rather than a guessed value
+  (`docs/x230_read.py`; the six states above).
+- **No box without data.** A signal-chain block appears only when an extractor
+  finds the record field that justifies it, and the table under the drawing
+  cites that field (`docs/js/chain.js`, `vocabulary.MIC_CHAIN` / `RF_CHAIN`).
+- **Do not mark a record down for a question never asked of it.** Blocks a device
+  does not instantiate, parameters the draft never bound, and per-unit values are
+  out of the denominator, and the last are named in the profile's
+  `crosswalk.not_scorable`, not in code (`docs/x230_read.py`,
+  `Research/aes_x230_profile.json`).
+- **The page ships no vocabulary of its own.** Every chip, column and band comes
+  from `data/config.json`, built from `docs/vocabulary.py` and counted against the
+  corpus; a facet the data cannot satisfy never reaches the page
+  (`docs/build_data.py`).
+- **Compute once, where it must exist first.** The score is read in Python at
+  build time because the list filters and sorts on it; the browser renders the
+  report and never derives a second copy (`docs/build_data.py`, `docs/js/x230view.js`).
+- **Inherit only what is unanimous.** A kit takes a fact from its members only
+  when all of them agree (`docs/kits.py`).
+- **Someone else's work stays theirs.** The dataset is attributed, the mirrored
+  images are gitignored and never published, the fetcher honours `robots.txt` and
+  goes slowly by default (`.gitignore`, `docs/fetch_media.py`), and the service
+  worker never caches the image CDN (`docs/sw.js`).
+- **Network first.** A cache may only answer when the network cannot (`docs/sw.js`).

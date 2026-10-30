@@ -1,26 +1,14 @@
 # Documentation Index — Microphones.Like.audio
 
-## 📌 Documentation Overview
-This repository contains technical documentation, architecture notes, roadmap plans, and issue tracking for `Microphones.Like.audio`, aligned with `APK:Documentation` standards.
+The repository's own documentation is the top-level `README.md`: data sources and
+attribution, structure, build, the X230 reading, publishing and the app's philosophy.
 
-## 📁 Document Categories
+This folder holds only:
 
-### Audit
-- [Deep Research Audit](Audit/Deep Research Audit.md)
-- [Missing Rf Gear](Audit/Missing RF gear.md)
-- [Missing Lots Of Data](Audit/Missing lots of data.md)
-- [Missing Models](Audit/Missing models.md)
-- [Missing Brands](Audit/missing brands.md)
+- [Roadmap](Plans/ROADMAP.md) — a pointer to where plans live.
 
-### Issues
-- [Known Issues](Issues/KNOWN_ISSUES.md)
+Other written material in the repository:
 
-### Notes
-- [Aes Proposal](Notes/AES_proposal.md)
-- [Architecture Notes](Notes/ARCHITECTURE_NOTES.md)
-
-### Plans
-- [Roadmap](Plans/ROADMAP.md)
-
----
-*Aligned with `APK:Documentation` standards.*
+- [`Proposal/AES proposal.md`](../Proposal/AES%20proposal.md) — concept note for an AES
+  microphone directivity and response reporting convention, extending AES69 (SOFA).
+- `Research/audit_report.json` — field-presence audit of the scraped recordinghacks pages.
