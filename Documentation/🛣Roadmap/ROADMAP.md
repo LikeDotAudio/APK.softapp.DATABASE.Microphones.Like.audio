@@ -4,5 +4,5 @@ Today the catalogue builds from `Research/` in about a second (2,067 microphones
 systems from 215 brands, each scored against the AES-X230 profile) and publishes `docs/` to
 microphones.like.audio on every push to `main`.
 
-Plans are not kept here. They live as cards in
+Nothing to do is kept here. Every roadmap item lives in
 `APK.audio/Documentation/🛣Roadmap/roadmap.htm`.
