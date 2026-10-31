@@ -14,7 +14,7 @@
  * cache away.
  */
 
-const CACHE = "mic-v1";
+const CACHE = "mic-v2";
 
 /* Enough to open the app cold with no network: the page, its stylesheet, its
    entry script and the icon. Every other module and data file joins the cache
@@ -22,6 +22,7 @@ const CACHE = "mic-v1";
 const SHELL = [
   "./",
   "./index.html",
+  "./vendor/apk-contracts/apk-tokens.css",
   "./css/app.css",
   "./js/main.js",
   "./icon.svg",

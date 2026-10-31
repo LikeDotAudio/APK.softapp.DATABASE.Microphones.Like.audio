@@ -98,8 +98,9 @@ python3 docs/build_data.py
 python3 -m http.server -d docs 8000
 ```
 
-The build takes about a second and prints its totals — checked 2026-10-30:
-`215 brands / 2067 microphones + 81 RF systems`, `kits 105 resolved (25
+The build takes about a second and prints its totals — checked 2026-10-30, after the
+build stopped double-counting the RF copies and the two duplicated Universal Audio models:
+`214 brands / 1983 microphones + 81 RF systems`, `kits 105 resolved (25
 mixed-type)`, `rf.json … 324 ranges`, `x230_report … 9 of 38 parameters ever
 answered, median score 44.0%`. It also prints a warning for every pattern, type
 and form factor in the data that `vocabulary.py` has no chip or label for; those
@@ -109,9 +110,22 @@ Then open <http://localhost:8000/>. The app needs HTTP — browsers block `fetch
 and ES modules from `file://`, so opening `docs/index.html` directly shows a
 notice instead of data.
 
-`pip install jsonschema` is optional: with it, the build validates the X230
-profile against its schema. Without it, the build's own cross-reference checks
-still run.
+**Before a deploy** (the same steps `deploy.yml` runs, in this order):
+
+```bash
+pip install 'jsonschema>=4.10'
+python3 docs/validate_research.py      # every Research record against its JSON Schema
+python3 docs/build_data.py && python3 docs/check_data.py   # build, then check docs/data/
+```
+
+`validate_research.py` checks microphone records against `microphone.schema.json`,
+RF (as `build_rf.py` normalises it) against `rf_component.schema.json`, the X230 profile
+and every record's X230 reading against theirs; it warns, without failing, about derived
+blocks committed in the source and duplicate models. `check_data.py` (stdlib) checks the
+tree the page reads: config vocabularies, the corpus stamp, totals, every brand file.
+`config.json` carries `corpus` (build date, source hash, counts), shown on the Statistics view.
+`Docker/dist.Dockerfile` is the same build as an image stage (`dist` = `docs/data/` at `/`)
+for WEB.Frontend-Assets to copy from.
 
 ## Media mirror
 
@@ -327,11 +341,10 @@ remembers a dismissal, and explains the share-menu route on iOS.
 
 This repository is a submodule at
 `PODS/POD.THIN/Softapps/DATABASE/DATABASE.Microphones.Like.audio`. `display.json`
-declares it to the launcher (`walk_project()` in
-`PODS/POD.THIN/WEB.OsApi/SRC/server.py`); the folder has no `entry` and no page
-at its root, so the launcher opens the folder itself — `app: docs/index.html` and
-`topic` are not read by that reader, and nothing publishes on
-`APK.audio/Gui/Display/Microphones`. The app holds no bus connection.
+declares it to the launcher (`walk_project()` / `place_app()` in WEB.OsApi); the
+folder has no page at its root, and the portal path in `app`
+(`APK:Softapps/…/docs/index.html`) is carried onto the tile, which the Launch Pad frames.
+There is no `topic`: the app holds no bus connection.
 `subGroup: "01 · Event"` files it at pipeline stage 01.
 
 ## Wiki

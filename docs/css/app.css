@@ -1,11 +1,13 @@
 /* Microphones.Like.Audio — all page styles.
    Loaded by index.html; the markup carries no <style> block of its own.
 
-   The house colour is #f4902c (R244 G144 B44). It drives --accent: every
+   The house colour is the brand accent, --apk-accent from vendor/apk-contracts/apk-tokens.css
+   (a held copy of the APK.audio contracts tokens; .apk.scripts/vendor_contract_web.py --check
+   fails on drift). It drives --accent: every
    divider, rule and highlight is a step of that hue. Two companions keep it
    readable: --accent-ink is what sits on top of a filled accent surface, and
    --accent-text is the darkened step used when the accent has to be small
-   text on the page background — #f4902c itself is far too light there. */
+   text on the page background — the accent itself is far too light there. */
 
 :root {
   --bg: #f9f6f2;
@@ -16,7 +18,7 @@
   --text: #1c1710;
   --muted: #756853;
   --faint: #a3937c;
-  --accent: #f4902c;
+  --accent: var(--apk-accent);
   --accent-text: #a35505;
   --accent-ink: #22160a;
   --accent-soft: #fdeada;
@@ -46,8 +48,8 @@
     --text: #efe7dc;
     --muted: #a8977f;
     --faint: #7a6a55;
-    --accent: #f4902c;
-    --accent-text: #f4902c;
+    --accent: var(--apk-accent);
+    --accent-text: var(--apk-accent);
     --accent-ink: #22160a;
     --accent-soft: #3a2611;
     --chip: #2a231a;
@@ -73,8 +75,8 @@
   --text: #efe7dc;
   --muted: #a8977f;
   --faint: #7a6a55;
-  --accent: #f4902c;
-  --accent-text: #f4902c;
+  --accent: var(--apk-accent);
+  --accent-text: var(--apk-accent);
   --accent-ink: #22160a;
   --accent-soft: #3a2611;
   --chip: #2a231a;

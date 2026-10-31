@@ -13,6 +13,8 @@ from config.json, which is built from docs/vocabulary.py.
 Run:  python3 docs/build_data.py
 """
 
+import datetime
+import hashlib
 import json
 import os
 import re
@@ -295,6 +297,30 @@ def main():
 
     warnings = []
 
+    # RF systems come from their own source through build_rf.py. Copies of them that
+    # sit in the microphone dataset (classification.kind "rf") were counted twice — once
+    # here, once from build_rf — so every wireless brand's index count ran high and its
+    # brand file (keyed by model slug) held fewer records than the index promised.
+    # docs/check_data.py catches that; the copies are dropped here, never trusted.
+    rf_copies = [m for m in mics if (m.get("classification") or {}).get("kind") == "rf"]
+    if rf_copies:
+        mics = [m for m in mics if (m.get("classification") or {}).get("kind") != "rf"]
+        warnings.append("%d RF records in Research/microphones.json ignored: RF is read from %s"
+                        % (len(rf_copies), "Research/Wireless Microphone_RF_Components.json"))
+
+    # One record per brand/model. A brand file is keyed by model slug, so a model listed
+    # twice already showed only its LAST record on the detail panel while the index
+    # carried two rows. The last one wins here too, so the index matches what is served;
+    # the duplicate is reported (and by validate_research.py) for the dataset to settle.
+    seen = {}
+    for m in mics:
+        seen[(m["source"]["brand_slug"], m["source"]["model_slug"])] = m
+    if len(seen) != len(mics):
+        dupes = len(mics) - len(seen)
+        warnings.append("%d duplicate brand/model record(s) in Research/microphones.json; the last of each is used"
+                        % dupes)
+        mics = list(seen.values())
+
     # Before anything reads a record: a set has no specification of its own, so
     # it borrows one from the microphones it contains. Done here rather than in
     # the source dataset because it is derived — Research/microphones.json keeps
@@ -424,6 +450,17 @@ def main():
         x230.write_report(OUT, x230_stats, warnings.append)
 
     config = build_config(mics, rf_records, warnings.append)
+    # Which corpus this deploy carries: the day it was built, the source file's hash and
+    # the counts, so a page on the site can be traced to the dataset that made it.
+    with open(SRC, "rb") as fh:
+        source_sha = hashlib.sha256(fh.read()).hexdigest()[:12]
+    config["corpus"] = {
+        "built": datetime.date.today().isoformat(),
+        "source_sha256": source_sha,
+        "microphones": len(mics),
+        "rf": len(rf_records),
+        "brands": len(brands),
+    }
     config_path = os.path.join(OUT, "config.json")
     with open(config_path, "w", encoding="utf-8") as fh:
         json.dump(config, fh, ensure_ascii=False, separators=(",", ":"))

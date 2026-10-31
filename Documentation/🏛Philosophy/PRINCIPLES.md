@@ -15,6 +15,15 @@ Each principle with the code that keeps it. Ecosystem rules: the APK.audio root'
 | **Generated data is built where it ships.** `docs/data/` is never committed; every place that serves the page builds it: the deploy workflow, apk.audio's root `ci.yml`, and the bench's web-static image (its `microphones-data` stage). | `PODS/POD.THIN/WEB.Frontend-Assets/Docker/Dockerfile` `microphones-data` |
 | **Publish the site, not the tools.** Every `.py` under `docs/` is excluded from the upload by pattern. | `.github/workflows/deploy.yml` `exclude: **/*.py` |
 
+| **A record that breaks its schema does not ship.** | `docs/validate_research.py`, run by `deploy.yml` before the build | Warnings only for derived blocks committed in the source and duplicate models |
+| **The built tree is checked before it is uploaded.** | `docs/check_data.py` | — |
+| **The brand accent is the contracts token.** | `docs/vendor/apk-contracts/apk-tokens.css` → `--accent` in `docs/css/app.css` | — |
+
+## Kept by design
+- **Theme key of its own.** The APK shell publishes no theme to follow; the page follows `prefers-color-scheme` like the shell, and `mic-theme` only remembers a visitor's toggle on microphones.like.audio.
+- **Schema validation outside `build_data.py`.** The build stays standard-library so the image stage (`Docker/dist.Dockerfile`, python:3.12-slim, no pip) can run it; the gate runs before deploy instead.
+
 ## Where it falls short
+- `Research/microphones.json` carries copies the build ignores or recomputes — 82 RF records (RF is read from its own file), derived `x230`/`kit` blocks — and two Universal Audio models listed twice with different content. **Needs owner:** decide whether to strip them from the source and which duplicate is right.
 - The dataset is used without the source's permission (stated plainly in the README, with a takedown promise).
 - The build warns on form factors with no label in `vocabulary.FORM_LABELS` and still exits 0.

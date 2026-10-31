@@ -61,6 +61,12 @@ export function renderStats() {
       years.length + " dated models"),
   );
   wrap.append(el("h2", "vh", "The collection at a glance"), tiles);
+  // The corpus this deploy carries (build_data.py stamps it into config.json).
+  const corpus = cfg().corpus;
+  if (corpus) {
+    wrap.append(el("p", "sub2", "Corpus built " + corpus.built + " · source " + corpus.source_sha256 +
+      " · " + corpus.microphones + " microphones, " + corpus.rf + " RF systems, " + corpus.brands + " brands"));
+  }
 
   /* ---- charts ---- */
   const figs = el("div", "figs");

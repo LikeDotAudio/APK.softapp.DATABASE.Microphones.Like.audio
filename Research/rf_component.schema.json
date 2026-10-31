@@ -16,7 +16,10 @@
         "dataset": { "type": "string", "description": "Source file name." },
         "manufacturer_key": { "type": "string", "description": "Verbatim top-level key in the source, e.g. 'Audio Technica'." },
         "model_key": { "type": "string", "description": "Verbatim second-level key, e.g. '4000/5000'." },
-        "brand_slug": { "type": "string", "description": "Brand this is filed under in the browser. Reuses the microphone brand slug when the manufacturer already sells mics (EV -> Electro-Voice), so wireless gear intermixes with that vendor's catalogue." },
+        "brand_slug": {
+          "type": "string",
+          "description": "Brand this is filed under in the browser. Reuses the microphone brand slug when the manufacturer already sells mics (EV -> Electro-Voice), so wireless gear intermixes with that vendor's catalogue."
+        },
         "model_slug": { "type": "string", "description": "URL-safe id within the brand. Always prefixed 'rf-' so it can never collide with a microphone model slug." }
       }
     },
@@ -66,10 +69,7 @@
         "presets": {
           "type": "object",
           "additionalProperties": false,
-          "properties": {
-            "min": { "type": ["integer", "null"] },
-            "max": { "type": ["integer", "null"] }
-          }
+          "properties": { "min": { "type": ["integer", "null"] }, "max": { "type": ["integer", "null"] } }
         },
         "ranges": {
           "type": "array",
@@ -95,7 +95,12 @@
           }
         }
       }
-    }
+    },
+    "pricing": { "type": "object", "description": "Carried by the RF records that sit inside Research/microphones.json (placeholders so the browser can file them beside microphones)." },
+    "specifications": { "type": "object", "description": "Carried by the RF records that sit inside Research/microphones.json (placeholders so the browser can file them beside microphones)." },
+    "content": { "type": "object", "description": "Carried by the RF records that sit inside Research/microphones.json (placeholders so the browser can file them beside microphones)." },
+    "media": { "type": "object", "description": "Carried by the RF records that sit inside Research/microphones.json (placeholders so the browser can file them beside microphones)." },
+    "x230": { "type": "object", "description": "Derived at build time (docs/x230_read.py)." }
   },
   "$defs": {
     "setting": {

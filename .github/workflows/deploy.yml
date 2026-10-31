@@ -8,6 +8,7 @@ on:
       - "Research/microphones.json"
       - "Research/Wireless Microphone_RF_Components.json"
       - "Research/aes_x230_profile.json"
+      - "Research/*.schema.json"
       - ".github/workflows/deploy.yml"
   workflow_dispatch:
     inputs:
@@ -31,9 +32,16 @@ jobs:
         with:
           python-version: "3.12"
 
-      # docs/data is generated, not committed — rebuild it from the source dataset.
+      # The gate: every Research record against its JSON Schema, before anything is built.
+      - name: Validate Research/ against its schemas
+        run: |
+          pip install 'jsonschema==4.23.0'
+          python3 docs/validate_research.py
+
+      # docs/data is generated, not committed — rebuild it from the source dataset,
+      # then check the tree the page reads (config shape, counts, every brand file).
       - name: Build data files
-        run: python3 docs/build_data.py
+        run: python3 docs/build_data.py && python3 docs/check_data.py
 
       - name: Upload over FTPS
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
