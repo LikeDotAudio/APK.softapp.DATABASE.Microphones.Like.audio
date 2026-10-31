@@ -1,6 +1,6 @@
 # Microphones.Like.audio
 
-A browsable catalogue of 2,067 microphones and 81 wireless systems from 215
+A browsable catalogue of 1,983 microphones and 81 wireless systems from 214
 brands, read against the **AES-X230** draft microphone profile.
 
 The point of the project is the last part. X230 describes a microphone as a set
@@ -15,7 +15,7 @@ standards draft needs and rarely has.
 whose work this project depends on entirely.** The specification pages,
 frequency-response charts, editorial descriptions, product-lineage notes and tag
 vocabulary are all theirs. `Research/microphones.json` is a structured extraction
-of 2,067 of those profile pages.
+of 1,983 microphone records (the RecordingHacks pages plus later audited additions).
 
 **It is used here without permission, for research and standards-development
 purposes.** No commercial use is intended or made. If recordinghacks would like
@@ -26,7 +26,7 @@ Other sources:
 
 | Source | Used for |
 |---|---|
-| recordinghacks.com | the microphone catalogue (2,067 records) |
+| recordinghacks.com | the microphone catalogue (1,983 records) |
 | `Research/Wireless Microphone_RF_Components.json` | 81 wireless systems, 324 tuning ranges |
 | AES X230 object-list workbook (`X230-Mic-Profile-ObjectList-180502`) | the profile: 38 parameters, blocks, enumerations |
 | AES X230 typical block diagrams (`X230-Mic-Profile-TypicalBlockDiagrams-180502`) | the three reference signal chains |
@@ -37,7 +37,7 @@ machine-readable. Every transcribed row carries the workbook row it came from.
 ## Structure
 
 ```
-Research/microphones.json            source dataset (~32 MB, 2,067 records)
+Research/microphones.json            source dataset (~24 MB, 1,983 records)
 Research/microphone.schema.json      what a microphone record is
 Research/rf_component.schema.json    what a wireless system record is
 Research/aes_x230_profile.json       the X230 profile, transcribed
@@ -99,7 +99,7 @@ python3 -m http.server -d docs 8000
 ```
 
 The build takes about a second and prints its totals — checked 2026-10-30, after the
-build stopped double-counting the RF copies and the two duplicated Universal Audio models:
+source was cleaned of its RF copies, derived blocks and two duplicated Universal Audio models:
 `214 brands / 1983 microphones + 81 RF systems`, `kits 105 resolved (25
 mixed-type)`, `rf.json … 324 ranges`, `x230_report … 9 of 38 parameters ever
 answered, median score 44.0%`. It also prints a warning for every pattern, type

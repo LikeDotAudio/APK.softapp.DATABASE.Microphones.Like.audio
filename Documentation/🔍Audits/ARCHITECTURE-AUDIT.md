@@ -22,12 +22,11 @@ The microphone and wireless-RF catalogue published at microphones.like.audio and
 | Boundary Integrity | 3 | The schemas are enforced at the Research boundary (`validate_research.py`) and the built tree at the page boundary (`check_data.py`) (delivered). |
 | Duplication Control | 3 | One AES proposal; the accent is the contracts token (delivered). The theme key is kept by design. |
 | Testing & Contracts | 3 | Schema gate + post-build check run in `deploy.yml` before FTPS (delivered). |
-| Change management | 2 | Corpus stamp in `config.json`, shown on the page (delivered). The source file still carries copies the build ignores, and two duplicate models — needs owner. |
+| Change management | 3 | Corpus stamp in `config.json`, shown on the page; the source file holds only source records (delivered). |
 Score key: 3 meets the standard · 2 minor gaps · 1 significant gaps · 0 absent / violated.
 
 ## Findings
 1. **Good — vocabulary is data, not code.** `docs/js/config.js`: "Nothing here is a literal: change a facet in vocabulary.py, rebuild, and the UI follows"; facets with zero count never reach the page.
-2. **The source dataset carries derived and foreign copies.** `Research/microphones.json` holds 82 RF records (duplicates of what `build_rf.py` reads from its own source; they made every wireless brand's index count double until the build began ignoring them), `x230` on 2,064 records and `kit` on 105 (both recomputed by the build), and Universal Audio SD-1 / Sphere DLX twice with different content. `validate_research.py` warns on each. **Needs owner:** strip the copies from the source and pick the right duplicate.
-3. **Pre-existing audit notes** (`Deep Research Audit.md`, `Missing *.md`, `KNOWN_ISSUES.md`) cover data completeness, not architecture; they are left as they are.
+2. **Pre-existing audit notes** (`Deep Research Audit.md`, `Missing *.md`, `KNOWN_ISSUES.md`) cover data completeness, not architecture; they are left as they are.
 
 Delivered items were removed from this page; see [🌍Publishing/DELIVERY.md](../%F0%9F%8C%8DPublishing/DELIVERY.md#delivered-from-the-2026-10-30-audit).
