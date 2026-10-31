@@ -7,7 +7,7 @@ How to use it and how it is built.
 <!-- wiki:index -->
 | Page | What |
 |---|---|
-| [AES_proposal.md](AES_proposal.md) | AES_proposal |
+| [AES_proposal.md](AES_proposal.md) | AES proposal (pointer) |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Architecture — Microphones.Like.audio |
 | [SMOKE.md](SMOKE.md) | Smoke test — DATABASE.Microphones.Like.audio |
 <!-- /wiki:index -->
