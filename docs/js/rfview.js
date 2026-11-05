@@ -74,7 +74,9 @@ export function renderRfView() {
     host.appendChild(el("div", "empty", "Loading wireless systems…"));
     ensureRf().then(renderRfView).catch((err) => {
       host.innerHTML = "";
-      host.appendChild(el("div", "empty", "Could not load data/rf.json — " + err.message));
+      const slot = el("div", "empty");
+      host.appendChild(slot);
+      if (!problemInto(slot, err, { subject: "data/rf.json", onRetry: renderRfView })) slot.textContent = "Could not load data/rf.json — " + err.message;
     });
     return;
   }

@@ -13,12 +13,14 @@ import { state } from "./state.js";
 import { openTag, renderTagView } from "./tagview.js";
 import { renderTree, stepTree } from "./tree.js";
 import { applyFilters, route } from "./views.js";
+import { describeApp, problemInto } from "./softapp.js";
 
 /* ------------------------------------------------------------------- boot */
 async function boot() {
   // Before the data: an install offer does not depend on it, and a failed
   // fetch should still leave an installable app.
   initInstall();
+  describeApp();
   try {
     await loadConfig();
     renderControls();
@@ -44,6 +46,12 @@ function showLoadError(err) {
   const local = location.protocol === "file:";
   $("tree").innerHTML = "";
   const box = el("div", "notice");
+  $("tree").appendChild(box);
+  const drawn = local
+    ? problemInto(box, err, { code: "unsupported_browser", subject: "data/config.json",
+        fix: ["From the repository root run: python3 -m http.server -d docs 8000, then open http://localhost:8000/ — browsers block fetch() and ES modules from file://."] })
+    : problemInto(box, err, { subject: "data files", onRetry: () => location.reload() });
+  if (drawn) return;
   box.innerHTML = local
     ? "<b>Open this over HTTP.</b><p>Browsers block <code>fetch()</code> and ES modules from " +
       "<code>file://</code>, so the data files can't load. From the repository root run:</p>" +
@@ -51,7 +59,6 @@ function showLoadError(err) {
       "<p>then visit <a href='http://localhost:8000/'>http://localhost:8000/</a></p>"
     : "<b>Could not load the data files.</b><p>" + esc(err.message) +
       "</p><p>Generate them first:</p><code>python3 docs/build_data.py</code>";
-  $("tree").appendChild(box);
 }
 
 /* -------------------------------------------------------- filter bar events

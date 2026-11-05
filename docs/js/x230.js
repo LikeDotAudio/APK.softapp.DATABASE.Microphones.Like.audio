@@ -20,6 +20,7 @@
  * See x230_read.py compact() for the other half of this contract. */
 
 import { el } from "./dom.js";
+import { httpError, problemInto } from "./softapp.js";
 
 /* ------------------------------------------------------------------ loading */
 
@@ -29,7 +30,7 @@ let profile = null;
 export function ensureX230() {
   if (!promise) {
     promise = fetch("data/x230.json")
-      .then((r) => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then((r) => { if (!r.ok) throw httpError(r, "data/x230.json"); return r.json(); })
       .then((data) => { profile = data; return data; })
       .catch((err) => { promise = null; throw err; });
   }
@@ -203,7 +204,9 @@ export function x230Section(rec) {
     })
     .catch((err) => {
       body.innerHTML = "";
-      body.appendChild(el("div", "sub", "Could not load data/x230.json — " + err.message));
+      const slot = el("div", "sub");
+      body.appendChild(slot);
+      if (!problemInto(slot, err, { subject: "data/x230.json" })) slot.textContent = "Could not load data/x230.json — " + err.message;
     });
 
   return host;

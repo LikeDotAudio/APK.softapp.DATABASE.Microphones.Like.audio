@@ -59,12 +59,14 @@ export async function exportCsv(rows, button) {
   const slugs = [...new Set(rows.map((r) => r.brandSlug))];
   const label = button && button.textContent;
   if (button) button.disabled = true;
+  const missed = [];
+  let lastErr = null;
   try {
     for (let i = 0; i < slugs.length; i += 12) {
       if (button) {
         button.textContent = "Loading " + Math.min(i + 12, slugs.length) + "/" + slugs.length + "…";
       }
-      await Promise.all(slugs.slice(i, i + 12).map((s) => loadBrand(s).catch(() => null)));
+      await Promise.all(slugs.slice(i, i + 12).map((s) => loadBrand(s).catch((err) => { missed.push(s); lastErr = err; return null; })));
     }
     if (button) button.textContent = "Building CSV…";
 
@@ -80,6 +82,13 @@ export async function exportCsv(rows, button) {
     a.download = "microphones-" + rows.length + ".csv";
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    // A brand file that did not load leaves its rows blank in the CSV: say which, not nothing.
+    if (missed.length && window.APKSoftapp) window.APKSoftapp.showProblem(lastErr, {
+      subject: "CSV export",
+      detail: missed.length + " brand file(s) did not load (" + missed.slice(0, 6).join(", ") + (missed.length > 6 ? "…" : "") + "); their rows are blank in the CSV.",
+      fix: ["Export again once the data files load; rebuild them with python3 docs/build_data.py if they are missing."],
+      onRetry: () => exportCsv(rows, button),
+    });
   } finally {
     if (button) { button.textContent = label; button.disabled = false; }
   }

@@ -7,6 +7,7 @@
 
 import { $, el } from "./dom.js";
 import { ensureX230, x230 } from "./x230.js";
+import { httpError, problemInto } from "./softapp.js";
 
 /* The schemas and the corpus statistics are their own fetch: every device page
    loads x230.json for its panel, and none of them needs this. */
@@ -15,7 +16,7 @@ let reportPromise = null;
 function ensureReport() {
   if (!reportPromise) {
     reportPromise = fetch("data/x230_report.json")
-      .then((r) => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then((r) => { if (!r.ok) throw httpError(r, "data/x230_report.json"); return r.json(); })
       .catch((err) => { reportPromise = null; throw err; });
   }
   return reportPromise;
@@ -269,7 +270,9 @@ export function renderX230View() {
     host.appendChild(build(x230(), report));
   }).catch((err) => {
     host.innerHTML = "";
-    host.appendChild(el("div", "empty", "Could not load the X230 data files — " + err.message));
+    const slot = el("div", "empty");
+    host.appendChild(slot);
+    if (!problemInto(slot, err, { subject: "X230 data files", onRetry: renderX230View })) slot.textContent = "Could not load the X230 data files — " + err.message;
   });
 }
 

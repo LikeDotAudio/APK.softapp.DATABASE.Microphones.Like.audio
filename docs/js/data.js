@@ -15,13 +15,14 @@
  * worker still answers from its own cache when the network is gone. */
 
 import { state } from "./state.js";
+import { httpError } from "./softapp.js";
 
 /* The data files are generated together and must arrive together. */
 const FRESH = { cache: "no-cache" };
 
 export async function loadIndex() {
   const res = await fetch("data/index.json", FRESH);
-  if (!res.ok) throw new Error("HTTP " + res.status);
+  if (!res.ok) throw httpError(res, "data/index.json");
   state.index = await res.json();
   state.byBrand.clear();
   state.index.brands.forEach((b) => state.byBrand.set(b.slug, b));
@@ -32,7 +33,7 @@ export async function loadBrand(slug) {
   if (state.brandData.has(slug)) return state.brandData.get(slug);
   const file = state.byBrand.get(slug).file;
   const res = await fetch("data/brands/" + encodeURIComponent(file) + ".json", FRESH);
-  if (!res.ok) throw new Error("HTTP " + res.status + " loading " + file);
+  if (!res.ok) throw httpError(res, "data/brands/" + file + ".json");
   const data = await res.json();
   state.brandData.set(slug, data);
   return data;
@@ -45,7 +46,7 @@ let tagsPromise = null;
 export function ensureTags() {
   if (!tagsPromise) {
     tagsPromise = fetch("data/tags.json", FRESH)
-      .then((r) => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then((r) => { if (!r.ok) throw httpError(r, "data/tags.json"); return r.json(); })
       .then((data) => {
         state.tagList = data.tags;
         state.tagMembers = new Map(data.tags.map((t) => [t.name, new Set(t.mics)]));
@@ -63,7 +64,7 @@ let rfPromise = null;
 export function ensureRf() {
   if (!rfPromise) {
     rfPromise = fetch("data/rf.json", FRESH)
-      .then((r) => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then((r) => { if (!r.ok) throw httpError(r, "data/rf.json"); return r.json(); })
       .then((data) => {
         state.rf = data.systems;
         return data;

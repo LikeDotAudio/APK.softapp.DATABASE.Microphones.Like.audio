@@ -11,6 +11,7 @@ import { appLink, extLink, sanitize } from "./links.js";
 import { state } from "./state.js";
 import { openTag } from "./tagview.js";
 import { x230Section } from "./x230.js";
+import { problemInto } from "./softapp.js";
 
 export async function renderDetail() {
   const host = $("detail");
@@ -31,7 +32,9 @@ export async function renderDetail() {
     mic = bundle[state.model];
   } catch (err) {
     host.innerHTML = "";
-    host.appendChild(el("div", "empty", "Failed to load: " + err.message));
+    const slot = el("div", "empty");
+    host.appendChild(slot);
+    if (!problemInto(slot, err, { subject: state.brand, onRetry: renderDetail })) slot.textContent = "Failed to load: " + err.message;
     return;
   }
   if (!mic) {                                        // hand-typed or stale hash

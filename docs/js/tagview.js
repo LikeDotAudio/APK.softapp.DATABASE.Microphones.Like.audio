@@ -16,7 +16,9 @@ export function renderTagView() {
     grid.appendChild(el("div", "empty", "Loading tags…"));
     ensureTags().then(renderTagView).catch((err) => {
       grid.innerHTML = "";
-      grid.appendChild(el("div", "empty", "Could not load data/tags.json — " + err.message));
+      const slot = el("div", "empty");
+      grid.appendChild(slot);
+      if (!problemInto(slot, err, { subject: "data/tags.json", onRetry: renderTagView })) slot.textContent = "Could not load data/tags.json — " + err.message;
     });
     return;
   }
