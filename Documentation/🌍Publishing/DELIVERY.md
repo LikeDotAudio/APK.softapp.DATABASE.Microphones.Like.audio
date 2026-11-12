@@ -27,5 +27,14 @@
 - **WS-07 accent token** (from the SDK/contracts audit) — `docs/css/app.css` `--accent`/`--accent-text` read `var(--apk-accent)` from `docs/vendor/apk-contracts/apk-tokens.css` (vendored with `.apk.scripts/vendor_contract_web.py`, `--check`: ok), linked before `app.css` and precached by `sw.js` (cache `mic-v2`). Verified: headless Chrome computes `--accent` = `#f4902c`; the page renders 2,064 models.
 - **Source dataset cleaned** (owner decision) — `Research/microphones.json` lost the 82 RF records that duplicated `Wireless Microphone_RF_Components.json`, the derived `x230` (1,982) and `kit` (105) blocks with the kit-derived `classification.is_kit`/`transducer_types`, and the earlier copy of each duplicated Universal Audio model (SD-1, Sphere DLX; same `added_date`, so the later one in the file was kept; the dropped copies differed only in the derived `x230`). 2,067 → 1,983 records, ~32 → ~24 MB. `build_data.py` keeps its guards in case copies return. Verified: `validate_research.py` OK with no source warnings; `build_data.py && check_data.py` OK, 2,064 models in 214 brand files (unchanged from what the guarded build already served).
 
+## Delivered 2026-11-11 – 2026-11-12
+
+From this repository's own commits (the commit message is the record):
+
+- vendor: apk-contracts web bundle refreshed from contracts/generated/web (report.ts: LogLine + ProblemRecord, System/Problems family) (`7e9d366`)
+- vendor/apk-softapp: re-vendored — every problem card is reported through the SDK (ROAD-3695 step 2) (`a2250f3`)
+- vendor: apk-contracts web bundle refreshed from contracts/generated/web (five report codes, ROAD-3695; unit-gate, ROAD-3684) (`d91fe78`)
+- re-vendor apk-contracts web bundle: contracts 2.4.0 retires APK.audio/Tests/{suite} (ROAD-3729) (`fbeda5c`)
+
 ## Releases
 - **Released `2.0.0`, tag `v2.0.0`** (2026-11-01, ROAD-3452, the owner's V2) — no SDK pin; every manifest says 2.0.0; GitHub release `v2.0.0`.
